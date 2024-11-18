@@ -6,7 +6,8 @@ public class CharacterMovement : MonoBehaviour
 {
     public float MovementSpeed = 20.0f;
 
-    Rigidbody2D body;
+    Rigidbody2D body; //Getting the rigid body component
+    Animator animator; //Getting the animator component
 
     float horizontal;
     float vertical;
@@ -16,6 +17,7 @@ public class CharacterMovement : MonoBehaviour
     void Start()
     {
         body = GetComponent<Rigidbody2D>(); //Assign body to the Rigidbody
+        animator = GetComponent<Animator>(); //Assign animator to the Animator component
     }
 
     // Update is called once per frame
@@ -35,6 +37,10 @@ public class CharacterMovement : MonoBehaviour
             horizontal *= moveLimiter; //Moves at 70% speed when moving diagonally
             vertical *= moveLimiter;
         }
+
         body.velocity = new Vector2(horizontal * MovementSpeed, vertical * MovementSpeed); //To move the character
+
+        float speed = body.velocity.magnitude; //To calculate the current speed
+        animator.SetFloat("Speed", speed); //To update the Speed parameter in the Animator
     }
 }
