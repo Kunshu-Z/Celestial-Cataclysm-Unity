@@ -13,6 +13,8 @@ public class CharacterMovement : MonoBehaviour
     float vertical;
     float moveLimiter = 0.7f;
 
+    Vector2 lastDirection = Vector2.zero; //To determine the last movement direction from the player
+
     // Start is called before the first frame update
     void Start()
     {
@@ -38,9 +40,28 @@ public class CharacterMovement : MonoBehaviour
             vertical *= moveLimiter;
         }
 
-        body.velocity = new Vector2(horizontal * MovementSpeed, vertical * MovementSpeed); //To move the character
+        //Setting the velocity for the RigidBody
+        Vector2 movement = new Vector2(horizontal, vertical) * MovementSpeed;
+        body.velocity = movement;
 
         float speed = body.velocity.magnitude; //To calculate the current speed
         animator.SetFloat("Speed", speed); //To update the Speed parameter in the Animator
+
+        //Updating the direction parameters in the animator
+        if (movement != Vector2.zero)
+        {
+            //Normalizing the movement to get the direction
+            lastDirection = movement.normalized;
+
+            animator.SetFloat("Horizontal", lastDirection.x);
+            animator.SetFloat("Vertical", lastDirection.y);
+        }
+
+        else
+        {
+            //To maintain the last direction for idle animations 
+            animator.SetFloat("Horizontal", lastDirection.x);
+            animator.SetFloat("Vertical", lastDirection.y);
+        }  
     }
 }
